@@ -1,6 +1,13 @@
 from flask import Flask, render_template, request
 from openai import OpenAI
 import os
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
@@ -8,6 +15,9 @@ api_key = os.environ.get("OPENAI_API_KEY")
 client = None
 if api_key:
     client = OpenAI(api_key=api_key)
+    logger.info("OpenAI client initialized successfully")
+else:
+    logger.warning("OPENAI_API_KEY not found in environment variables")
 
 COLOR_LABELS = {
     "red": "怒ってる時・イライラしてる時",
@@ -21,6 +31,7 @@ COLOR_LABELS = {
 
 def generate_ai_message(color_label):
     if not client:
+        logger.warning("Attempted to generate message without API key")
         return "OpenAI APIキーが設定されていません。アプリを使用するには、OPENAI_API_KEYを設定してください。"
     
     prompt = f"""
@@ -32,11 +43,16 @@ def generate_ai_message(color_label):
 
 この気持ちにそっと寄り添うメッセージを、80文字程度で1つ作ってください。
 """
-    response = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[{"role": "user", "content": prompt}]
-    )
-    return response.choices[0].message.content
+    try:
+        logger.info(f"Generating AI message for emotion: {color_label}")
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[{"role": "user", "content": prompt}]
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        logger.error(f"Failed to generate AI message: {str(e)}")
+        return "ごめんなさい、今メッセージを作れませんでした。もう一度試してみてください。"
 
 @app.route("/", methods=["GET"])
 def index():

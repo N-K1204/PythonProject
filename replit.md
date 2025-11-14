@@ -25,12 +25,15 @@ To help children:
 - **Japanese Language Support**: Full interface in Japanese for accessibility
 
 ## Recent Changes
-- **November 14, 2025**: Initial project setup
+- **November 14, 2025**: Initial project setup and improvements
   - Created Flask web application structure
   - Set up templates (index.html, result.html) and static CSS
-  - Configured OpenAI API integration with error handling
+  - Configured OpenAI API integration with modern client syntax
   - Added workflow configuration to run on port 5000
   - Implemented graceful handling for missing API key
+  - Added comprehensive logging (startup, API key status, API call failures)
+  - Implemented try/except error handling for OpenAI API calls
+  - Added user-friendly error messages in Japanese for API failures
 
 ## Technical Stack
 - **Backend**: Flask (Python)
