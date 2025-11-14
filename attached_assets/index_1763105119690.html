@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>気持ちの色アプリ</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>今日の気持ちの色を選ぼう🌈</h1>
+    <div class="color-container">
+        {% for key, label in colors.items() %}
+        <a href="{{ url_for('select', color=key) }}">
+            <div class="circle {{ key }}" title="{{ label }}"></div>
+        </a>
+        {% endfor %}
+    </div>
+</body>
+</html>

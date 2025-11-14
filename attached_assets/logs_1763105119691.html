@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>これまでの気持ち</h1>
+
+{% for log in logs %}
+    <div style="margin-bottom: 15px; text-align: left;">
+        <span style="color: {{ log.color }}; font-size: 20px;">●</span>
+        {{ log.time }} : {{ emotions[log.color] }}<br>
+        <small>{{ log.memo }}</small>
+    </div>
+{% endfor %}
+
+<a class="back" href="/">トップにもどる</a>
+
+{% endblock %}
