@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>気持ちを書いてみよう</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>今の気持ちを書いてみよう✍️</h1>
+    <div class="emotion-display">
+        <div class="circle {{ color }}"></div>
+        <p class="emotion-label">{{ emotion_label }}</p>
+    </div>
+    
+    <form action="{{ url_for('generate') }}" method="POST" class="input-form">
+        <input type="hidden" name="color" value="{{ color }}">
+        <textarea name="user_input" rows="6" placeholder="今、どんなことを思ってる？&#10;どんな気持ち？&#10;&#10;書きたくないときは、そのまま送信してもOKだよ😊" maxlength="500"></textarea>
+        <button type="submit">メッセージをもらう</button>
+    </form>
+    
+    <a href="{{ url_for('index') }}" class="back-link">← 色選びに戻る</a>
+</body>
+</html>

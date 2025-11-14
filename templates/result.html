@@ -10,6 +10,9 @@
     <div class="message-box">
         <p>{{ message }}</p>
     </div>
-    <a href="{{ url_for('index') }}"><button>戻る</button></a>
+    <div class="nav-links">
+        <a href="{{ url_for('index') }}"><button>別の気持ちを選ぶ</button></a>
+        <a href="{{ url_for('logs') }}"><button class="secondary">記録を見る</button></a>
+    </div>
 </body>
 </html>

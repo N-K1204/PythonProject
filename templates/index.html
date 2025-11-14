@@ -9,10 +9,13 @@
     <h1>今日の気持ちの色を選ぼう🌈</h1>
     <div class="color-container">
         {% for key, label in colors.items() %}
-        <a href="{{ url_for('select', color=key) }}">
+        <a href="{{ url_for('input_form', color=key) }}">
             <div class="circle {{ key }}" title="{{ label }}"></div>
         </a>
         {% endfor %}
+    </div>
+    <div class="nav-links">
+        <a href="{{ url_for('logs') }}" class="nav-button">記録を見る 📝</a>
     </div>
 </body>
 </html>

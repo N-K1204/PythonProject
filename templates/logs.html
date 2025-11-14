@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>気持ちの記録</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>これまでの気持ちの記録📝</h1>
+    
+    <div class="logs-container">
+        {% if logs %}
+            {% for log in logs %}
+            <div class="log-entry">
+                <div class="log-header">
+                    <span class="circle-small {{ log.color }}"></span>
+                    <span class="log-date">{{ log.created_at }}</span>
+                </div>
+                <div class="log-emotion">{{ log.emotion_label }}</div>
+                {% if log.user_input and log.user_input != "（何も書かなかった）" %}
+                <div class="log-user-input">
+                    <strong>書いたこと:</strong> {{ log.user_input }}
+                </div>
+                {% endif %}
+                <div class="log-ai-message">
+                    💌 {{ log.ai_message }}
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p class="no-logs">まだ記録がありません</p>
+        {% endif %}
+    </div>
+    
+    <div class="nav-links">
+        <a href="{{ url_for('index') }}" class="nav-button">← トップに戻る</a>
+    </div>
+</body>
+</html>
