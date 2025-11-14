@@ -4,7 +4,10 @@ import os
 
 app = Flask(__name__)
 
-client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+api_key = os.environ.get("OPENAI_API_KEY")
+client = None
+if api_key:
+    client = OpenAI(api_key=api_key)
 
 COLOR_LABELS = {
     "red": "怒ってる時・イライラしてる時",
@@ -17,6 +20,9 @@ COLOR_LABELS = {
 }
 
 def generate_ai_message(color_label):
+    if not client:
+        return "OpenAI APIキーが設定されていません。アプリを使用するには、OPENAI_API_KEYを設定してください。"
+    
     prompt = f"""
 あなたは子どもの気持ちに寄り添う優しいカウンセラーです。
 決して否定せず、その子の気持ちを受け止めて安心させる言葉だけを返してください。
