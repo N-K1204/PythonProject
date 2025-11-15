@@ -16,7 +16,7 @@ app = Flask(__name__)
 api_key = os.environ.get("OPENAI_API_KEY")
 client = None
 if api_key:
-    client = OpenAI(api_key=api_key)
+    client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
     logger.info("OpenAI client initialized successfully")
 else:
     logger.warning("OPENAI_API_KEY not found in environment variables")
