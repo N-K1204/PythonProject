@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>今日の気持ちの色を選ぼう🌈</h1>
+    <h1>今の気持ちの色を選ぼう🌈</h1>
     <div class="color-container">
         {% for key, label in colors.items() %}
         <a href="{{ url_for('input_form', color=key) }}">

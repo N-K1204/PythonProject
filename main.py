@@ -126,8 +126,8 @@ def logs():
         
         return render_template("logs.html", logs=logs_data, colors=COLOR_LABELS)
     except Exception as e:
-        logger.error(f"Failed to fetch logs: {str(e)}")
-        return "ログの取得に失敗しました", 500
+        # 🔥 エラーの内容をそのまま画面に表示
+        return f"エラー内容: {str(e)}", 500
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
