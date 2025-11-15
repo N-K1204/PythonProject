@@ -54,8 +54,13 @@ def generate_ai_message(color_label, user_input):
         logger.info(f"Generating AI message for emotion: {color_label}, input: {user_input[:50]}...")
         response = client.chat.completions.create(
             model="gpt-4o-mini",
-            messages=[{"role": "user", "content": prompt}]
+            messages=[
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": prompt}
+            ]
         )
+        return response.choices[0].message["content"]
+
         return response.choices[0].message.content
     except Exception as e:
         logger.error(f"Failed to generate AI message: {str(e)}")
