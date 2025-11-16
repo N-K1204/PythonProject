@@ -50,21 +50,22 @@ def generate_ai_message(color_label, user_input):
 この子の気持ちにそっと寄り添う優しいメッセージを、50文字程度で1つ作ってください。
 短く、温かく、受け止める言葉をお願いします。
 """
+
     try:
         logger.info(f"Generating AI message for emotion: {color_label}, input: {user_input[:50]}...")
+
         response = client.chat.completions.create(
             model="gpt-4o-mini",
-            messages=[
-            {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": prompt}
-            ]
+            messages=[{"role": "user", "content": prompt}]
         )
+
+        # ✨ 最新のSDKではこう取り出す！
         return response.choices[0].message["content"]
 
-        return response.choices[0].message.content
     except Exception as e:
         logger.error(f"Failed to generate AI message: {str(e)}")
         return "ごめんなさい、今メッセージを作れませんでした。もう一度試してみてください。"
+
 
 def save_log(color, emotion_label, user_input, ai_message):
     try:
