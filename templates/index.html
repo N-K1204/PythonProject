@@ -2,20 +2,133 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>気持ちの色アプリ</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>きもちをえらぶ</title>
+
+    <style>
+        body {
+            font-family: "Nunito", "Hiragino Maru Gothic ProN", sans-serif;
+            background: #fff8f8;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 8vw;
+            color: #ff8ba7;
+            margin-bottom: 20px;
+        }
+
+        /* グリッド（上4つ・下3つずらして配置） */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-row-gap: 20px;
+            grid-column-gap: 10px;
+            margin-top: 20px;
+        }
+
+        /* ボタンの基本デザイン */
+        .emotion-btn {
+            padding: 12px;
+            border-radius: 14px;
+            font-size: 4.5vw;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            min-height: 20vw;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+
+        /* 色ごとの背景 */
+        .pink { background: #ff9ecb; }
+        .green { background: #a8e6a3; }
+        .yellow { background: #ffe27a; color: #7a5400; }
+        .purple { background: #c7b4ff; }
+        .blue { background: #a7c7ff; }
+        .black { background: #b5b5b5; }
+        .red { background: #ff9a9a; }
+
+        /* 下の段3つの位置調整（ずらす） */
+        .blue { grid-column: 2; }
+        .black { grid-column: 3; }
+        .red { grid-column: 4; }
+
+        /* アイコンを大きく */
+        .icon {
+            font-size: 5vw;
+            margin-bottom: 2px;
+        }
+
+        /* きろくボタン */
+        .logs-btn {
+            margin-top: 30px;
+            display: inline-block;
+            padding: 10px 20px;
+            background: #b5d6ff;
+            color: white;
+            border-radius: 30px;
+            font-size: 5vw;
+            text-decoration: none;
+        }
+
+        /* スマホ小画面調整 */
+        @media (max-width: 480px) {
+            .emotion-btn {
+                min-height: 22vw;
+                font-size: 4.8vw;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>今の気持ちの色を選ぼう🌈</h1>
-    <div class="color-container">
-        {% for key, label in colors.items() %}
-        <a href="{{ url_for('input_form', color=key) }}">
-            <div class="circle {{ key }}" title="{{ label }}"></div>
+
+    <h1>🌈 きもちノート 🌈</h1>
+
+    <div class="grid">
+        <!-- 上4つ -->
+        <a href="/input/pink" class="emotion-btn pink">
+            <div class="icon">😄</div>
+            うれしい！
         </a>
-        {% endfor %}
+
+        <a href="/input/green" class="emotion-btn green">
+            <div class="icon">😌</div>
+            おちつく
+        </a>
+
+        <a href="/input/yellow" class="emotion-btn yellow">
+            <div class="icon">😮</div>
+            びっくり！
+        </a>
+
+        <a href="/input/purple" class="emotion-btn purple">
+            <div class="icon">😕</div>
+            もやもや
+        </a>
+
+        <!-- 下3つ（位置ずらし） -->
+        <a href="/input/blue" class="emotion-btn blue">
+            <div class="icon">😢</div>
+            さみしい…
+        </a>
+
+        <a href="/input/black" class="emotion-btn black">
+            <div class="icon">😴</div>
+            つかれた…
+        </a>
+
+        <a href="/input/red" class="emotion-btn red">
+            <div class="icon">😡</div>
+            イライラ
+        </a>
     </div>
-    <div class="nav-links">
-        <a href="{{ url_for('logs') }}" class="nav-button">記録を見る 📝</a>
-    </div>
+
+    <a href="/logs" class="logs-btn">📘 きろくを みる</a>
+
 </body>
 </html>

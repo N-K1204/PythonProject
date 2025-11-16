@@ -1,8 +1,6 @@
-from flask import Flask, render_template, request, redirect, url_for
-from openai import OpenAI
+from flask import Flask, render_template, request
 import os
 import logging
-import psycopg2
 from datetime import datetime
 
 logging.basicConfig(
@@ -13,128 +11,137 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
-api_key = os.environ.get("OPENAI_API_KEY")
-client = None
-if api_key:
-    client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
-    logger.info("OpenAI client initialized successfully")
-else:
-    logger.warning("OPENAI_API_KEY not found in environment variables")
-
 COLOR_LABELS = {
-    "red": "怒ってる時・イライラしてる時",
-    "blue": "寂しい時・しょんぼりしてる時",
-    "yellow": "落ち着かない時・びっくりした時",
-    "green": "落ち着いてる時・ホッとしてる時",
-    "pink": "嬉しい時・楽しい時",
-    "purple": "モヤモヤしてる時・よく分からない気持ちの時",
-    "black": "疲れてる時・何も考えたくない時"
+    "pink": "😄 うれしい！",
+    "green": "😌 おちつく",
+    "yellow": "😮 びっくり！",
+    "purple": "😕 もやもや",
+    "blue": "😢 さみしい...",
+    "black": "😴 つかれた...",
+    "red": "😡 イライラ"
 }
 
-def get_db_connection():
-    conn = psycopg2.connect(os.environ.get("DATABASE_URL"))
-    return conn
+LOG_FILE = "logs_local.txt"
 
-def generate_ai_message(color_label, user_input):
-    if not client:
-        logger.warning("Attempted to generate message without API key")
-        return "OpenAI APIキーが設定されていません。アプリを使用するには、OPENAI_API_KEYを設定してください。"
-    
-    prompt = f"""
-あなたは子どもの気持ちに寄り添う優しいカウンセラーです。
-決して否定せず、その子の気持ちを受け止めて安心させる言葉だけを返してください。
+FIXED_MESSAGE = "きもち、うけとったよ！ありがとう😊"
 
-【気持ちの色】: {color_label}
-【子どもが書いたこと】: {user_input}
 
-この子の気持ちにそっと寄り添う優しいメッセージを、50文字程度で1つ作ってください。
-短く、温かく、受け止める言葉をお願いします。
-"""
+def message(color_label, user_input):
+    return FIXED_MESSAGE
 
+
+def save_log(color, emotion_label, user_input):
+    # 空欄なら「-」にする
+    if not user_input.strip():
+        user_input = "-"
+
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    # ai_message は保存しない
+    line = f"{timestamp}\t{color}\t{emotion_label}\t{user_input}\n"
     try:
-        logger.info(f"Generating AI message for emotion: {color_label}, input: {user_input[:50]}...")
-
-        response = client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[{"role": "user", "content": prompt}]
-        )
-
-        # ✨ 最新のSDKではこう取り出す！
-        return response.choices[0].message["content"]
-
-    except Exception as e:
-        logger.error(f"Failed to generate AI message: {str(e)}")
-        return "ごめんなさい、今メッセージを作れませんでした。もう一度試してみてください。"
-
-
-def save_log(color, emotion_label, user_input, ai_message):
-    try:
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute(
-            "INSERT INTO emotion_logs (color, emotion_label, user_input, ai_message) VALUES (%s, %s, %s, %s)",
-            (color, emotion_label, user_input, ai_message)
-        )
-        conn.commit()
-        cur.close()
-        conn.close()
+        with open(LOG_FILE, "a", encoding="utf-8") as f:
+            f.write(line)
         logger.info(f"Saved log for color: {color}")
     except Exception as e:
-        logger.error(f"Failed to save log: {str(e)}")
+        logger.error(f"Failed to save log: {e}")
 
-@app.route("/", methods=["GET"])
+
+def load_logs(filter_color=None, keyword=None, date=None):
+    logs = []
+    if os.path.exists(LOG_FILE):
+        with open(LOG_FILE, "r", encoding="utf-8") as f:
+            for line in reversed(f.readlines()):  # 最新順
+                if not line.strip():
+                    continue  # 空行スキップ
+                parts = line.strip().split("\t")
+                if len(parts) < 4:
+                    continue  # 形式がおかしい行はスキップ
+                timestamp = parts[0]
+                color = parts[1]
+                emotion_label = parts[2]
+                user_input = parts[3] if parts[3] else "-"
+                # ai_message はもう使わないので読み飛ばす
+                if filter_color and color != filter_color:
+                    continue
+                if keyword and keyword not in user_input:
+                    continue
+                if date and not timestamp.startswith(date):
+                    continue
+                logs.append({
+                    "created_at": timestamp,
+                    "color": color,
+                    "emotion_label": emotion_label,
+                    "user_input": user_input
+                })
+    return logs
+
+@app.route("/")
 def index():
     return render_template("index.html", colors=COLOR_LABELS)
+
+
+THEME_COLORS = {
+    "pink":   {"bg": "#fff0f7", "main": "#ff8bb0"},
+    "green":  {"bg": "#f0fff3", "main": "#6ecb63"},
+    "yellow": {"bg": "#fffbe0", "main": "#f1c232"},
+    "purple": {"bg": "#f9f5ff", "main": "#b49cff"},
+    "blue":   {"bg": "#f0f6ff", "main": "#7da6ff"},
+    "black":  {"bg": "#f3f3f3", "main": "#8c8c8c"},
+    "red":    {"bg": "#fff0f0", "main": "#ff6f6f"},
+}
 
 @app.route("/input/<color>", methods=["GET"])
 def input_form(color):
     if color not in COLOR_LABELS:
         return "色が無効です", 400
-    return render_template("input.html", color=color, emotion_label=COLOR_LABELS[color])
+
+    theme = THEME_COLORS[color]
+
+    return render_template(
+        "input.html",
+        color=color,
+        emotion_label=COLOR_LABELS[color],
+        bg_color=theme["bg"],
+        main_color=theme["main"]
+    )
+
+
 
 @app.route("/generate", methods=["POST"])
 def generate():
     color = request.form.get("color")
     user_input = request.form.get("user_input", "")
-    
+
     if color not in COLOR_LABELS:
         return "色が無効です", 400
-    
-    if not user_input.strip():
-        user_input = "（何も書かなかった）"
-    
+
     emotion_label = COLOR_LABELS[color]
-    ai_message = generate_ai_message(emotion_label, user_input)
-    
-    save_log(color, emotion_label, user_input, ai_message)
-    
+    ai_message = message(emotion_label, user_input)
+
+    # ai_message を保存しない仕様に変更
+    save_log(color, emotion_label, user_input)
+
     return render_template("result.html", color=color, emotion_label=emotion_label, message=ai_message)
 
-@app.route("/logs", methods=["GET"])
+
+@app.route("/logs")
 def logs():
-    try:
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute("SELECT color, emotion_label, user_input, ai_message, created_at FROM emotion_logs ORDER BY created_at DESC LIMIT 50")
-        logs = cur.fetchall()
-        cur.close()
-        conn.close()
-        
-        logs_data = []
-        for log in logs:
-            logs_data.append({
-                "color": log[0],
-                "emotion_label": log[1],
-                "user_input": log[2],
-                "ai_message": log[3],
-                "created_at": log[4].strftime("%Y年%m月%d日 %H:%M")
-            })
-        
-        return render_template("logs.html", logs=logs_data, colors=COLOR_LABELS)
-    except Exception as e:
-        # 🔥 エラーの内容をそのまま画面に表示
-        return f"エラー内容: {str(e)}", 500
+    filter_color = request.args.get("color")
+    keyword = request.args.get("keyword")
+    date = request.args.get("date")
+
+    logs_data = load_logs(filter_color=filter_color, keyword=keyword, date=date)
+
+    return render_template(
+        "logs.html",
+        logs=logs_data,
+        colors=COLOR_LABELS,
+        filter_color=filter_color,
+        keyword=keyword,
+        date=date
+    )
+
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=5000)

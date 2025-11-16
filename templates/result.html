@@ -2,17 +2,51 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>気持ちのメッセージ</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>きもちノート - きもちをうけとったよ！</title>
+    <style>
+        body {
+            font-family: "Hiragino Maru Gothic", sans-serif;
+            background-color: #fff8f0;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 36px;
+            color: #ff6fa3;
+            text-shadow: 1px 1px #ffd9e6;
+            margin-bottom: 30px;
+        }
+        p.message {
+            font-size: 24px;
+            color: #555;
+        }
+        /* ホームボタン用の余白 */
+        .home-btn-container {
+            margin-top: 50px; /* ページ下に下げる */
+        }
+        .home-btn {
+            font-size: 18px;
+            padding: 10px 20px;
+            border-radius: 10px;
+            background-color: #ff99cc;
+            border: none;
+            color: white;
+            cursor: pointer;
+            box-shadow: 2px 3px 5px rgba(0,0,0,0.2);
+            text-decoration: none;
+        }
+        .home-btn:hover {
+            transform: scale(1.05);
+        }
+    </style>
 </head>
 <body>
-    <h1>あなたの気持ちに寄り添うメッセージ💌</h1>
-    <div class="message-box">
-        <p>{{ message }}</p>
-    </div>
-    <div class="nav-links">
-        <a href="{{ url_for('index') }}"><button>別の気持ちを選ぶ</button></a>
-        <a href="{{ url_for('logs') }}"><button class="secondary">記録を見る</button></a>
+    <h1>きもち、うけとったよ！</h1>
+    <p class="message">ありがとう😊</p>
+
+    <!-- ホームに戻るボタン（ページ下に配置） -->
+    <div class="home-btn-container">
+        <a class="home-btn" href="{{ url_for('index') }}">🏠 ホームにもどる</a>
     </div>
 </body>
 </html>

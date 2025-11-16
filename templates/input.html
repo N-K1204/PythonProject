@@ -2,22 +2,93 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>気持ちを書いてみよう</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>きもちをかく</title>
+
+    <style>
+        body {
+            font-family: "Nunito", "Hiragino Maru Gothic ProN", sans-serif;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+            background: {{ bg_color }};
+        }
+
+        h1 {
+            font-size: 7vw;
+            font-weight: bold;
+            color: {{ main_color }};
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        .label {
+            font-size: 5vw;
+            margin-bottom: 20px;
+            color: {{ main_color }};
+        }
+
+        textarea {
+            width: 90%;
+            height: 35vh;
+            padding: 15px;
+            font-size: 5vw;
+            border-radius: 14px;
+            border: 2px solid {{ main_color }};
+            outline: none;
+            resize: none;
+            background: #ffffffd0;
+        }
+
+        textarea:focus {
+            background: #ffffff;
+        }
+
+        .submit-btn {
+            margin-top: 25px;
+            padding: 12px 30px;
+            font-size: 5vw;
+            border: none;
+            border-radius: 30px;
+            background: {{ main_color }};
+            color: white;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+        }
+
+        .home-btn {
+            display: inline-block;
+            margin-top: 40px;
+            padding: 10px 25px;
+            font-size: 5vw;
+            text-decoration: none;
+            color: {{ main_color }};
+        }
+    </style>
 </head>
 <body>
-    <h1>今の気持ちを書いてみよう✍️</h1>
-    <div class="emotion-display">
-        <div class="circle {{ color }}"></div>
-        <p class="emotion-label">{{ emotion_label }}</p>
-    </div>
-    
-    <form action="{{ url_for('generate') }}" method="POST" class="input-form">
+
+    <h1>{{ emotion_label }}</h1>
+
+    <p class="label">いまの きもちを かいてね ✍️</p>
+
+    <form action="/generate" method="POST">
         <input type="hidden" name="color" value="{{ color }}">
-        <textarea name="user_input" rows="6" placeholder="今、どんなことを思ってる？&#10;どんな気持ち？&#10;&#10;書きたくないときは、そのまま送信してもOKだよ😊" maxlength="500"></textarea>
-        <button type="submit">メッセージをもらう</button>
+
+        <textarea 
+            name="user_input"
+            placeholder="ここに かいてね"
+            autofocus
+        ></textarea>
+
+
+        <br>
+
+        <button type="submit" class="submit-btn">
+            おくる 💌
+        </button>
     </form>
-    
-    <a href="{{ url_for('index') }}" class="back-link">← 色選びに戻る</a>
+
+    <a href="/" class="home-btn">🏠 ホームに もどる</a>
+
 </body>
 </html>

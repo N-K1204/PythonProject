@@ -2,38 +2,136 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>気持ちの記録</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>きもちノート - きろく</title>
+    <style>
+        body {
+            font-family: "Hiragino Maru Gothic", sans-serif;
+            background-color: #fff8f0;
+            padding: 20px;
+            position: relative;
+        }
+        h1 {
+            text-align: center;
+            font-size: 36px;
+            color: #ff6fa3;
+            text-shadow: 1px 1px #ffd9e6;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        th, td {
+            border: 1px solid #ffb366;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #ffe0b3;
+        }
+        .color-square {
+            display: inline-block;
+            width: 25px;
+            height: 25px;
+            border-radius: 5px;
+        }
+        .red { background-color: #ff5c5c; }
+        .blue { background-color: #5ca0ff; }
+        .yellow { background-color: #ffe066; }
+        .green { background-color: #5cd65c; }
+        .pink { background-color: #ff99cc; }
+        .purple { background-color: #b386ff; }
+        .black { background-color: #777777; }
+
+        .search-form {
+            text-align: center;
+            margin-top: 20px;
+        }
+        select, input[type="date"] {
+            font-size: 18px;
+            padding: 5px 10px;
+            margin: 5px;
+            border-radius: 10px;
+            border: 2px solid #ffb366;
+        }
+        button, .home-btn {
+            font-size: 18px;
+            padding: 5px 15px;
+            border-radius: 10px;
+            background-color: #ff99cc;
+            border: none;
+            color: white;
+            cursor: pointer;
+            box-shadow: 2px 3px 5px rgba(0,0,0,0.2);
+            transition: transform 0.1s;
+            text-decoration: none;
+        }
+        button:hover, .home-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* 上下に飛ぶボタン */
+        .scroll-btn {
+            position: fixed;
+            right: 20px;
+            padding: 10px 15px;
+            background-color: #ffb366;
+            color: white;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 2px 3px 5px rgba(0,0,0,0.2);
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .scroll-top { bottom: 70px; } /* 下から上に戻るボタン */
+        .scroll-bottom { bottom: 20px; } /* 上から下にスクロールボタン */
+    </style>
 </head>
 <body>
-    <h1>これまでの気持ちの記録📝</h1>
-    
-    <div class="logs-container">
-        {% if logs %}
-            {% for log in logs %}
-            <div class="log-entry">
-                <div class="log-header">
-                    <span class="circle-small {{ log.color }}"></span>
-                    <span class="log-date">{{ log.created_at }}</span>
-                </div>
-                <div class="log-emotion">{{ log.emotion_label }}</div>
-                {% if log.user_input and log.user_input != "（何も書かなかった）" %}
-                <div class="log-user-input">
-                    <strong>書いたこと:</strong> {{ log.user_input }}
-                </div>
-                {% endif %}
-                <div class="log-ai-message">
-                    💌 {{ log.ai_message }}
-                </div>
-            </div>
-            {% endfor %}
-        {% else %}
-            <p class="no-logs">まだ記録がありません</p>
-        {% endif %}
+    <div style="text-align:center; margin-bottom: 20px;">
+        <a class="home-btn" href="{{ url_for('index') }}">🏠 ホームに戻る</a>
     </div>
-    
-    <div class="nav-links">
-        <a href="{{ url_for('index') }}" class="nav-button">← トップに戻る</a>
+
+    <h1>きろく</h1>
+
+    <div class="search-form">
+        <form method="get" action="{{ url_for('logs') }}">
+            <label>きもちでしらべる:
+                <select name="color">
+                    <option value="">ぜんぶ</option>
+                    {% for key, label in colors.items() %}
+                    <option value="{{ key }}" {% if filter_color == key %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label>ひづけでしらべる:
+                <input type="date" name="date" value="{{ filter_date }}">
+            </label>
+            <button type="submit">しらべる</button>
+        </form>
     </div>
+
+    <table>
+        <tr>
+            <th>ひづけ</th>
+            <th>いろ</th>
+            <th>きもち</th>
+            <th>かいたこと</th>
+        </tr>
+        {% for log in logs %}
+        <tr>
+            <td>{{ log.created_at }}</td>
+            <td><span class="color-square {{ log.color }}"></span></td>
+            <td>{{ log.emotion_label }}</td>
+            <td>{{ log.user_input if log.user_input != '' else '-' }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <!-- スクロールボタン -->
+    <button class="scroll-btn scroll-top" onclick="window.scrollTo({top:0, behavior:'smooth'})">↑ トップへ</button>
+    <button class="scroll-btn scroll-bottom" onclick="window.scrollTo({top:document.body.scrollHeight, behavior:'smooth'})">↓ 下へ</button>
 </body>
 </html>
