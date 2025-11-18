@@ -12,12 +12,12 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 
 COLOR_LABELS = {
-    "pink": "😄 うれしい！",
+    "pink": "😄 うれしい",
     "green": "😌 おちつく",
-    "yellow": "😮 びっくり！",
+    "yellow": "😮 びっくり",
     "purple": "😕 もやもや",
-    "blue": "😢 さみしい...",
-    "black": "😴 つかれた...",
+    "blue": "😢 さみしい",
+    "black": "😴 つかれた",
     "red": "😡 イライラ"
 }
 
@@ -106,8 +106,6 @@ def input_form(color):
         main_color=theme["main"]
     )
 
-
-
 @app.route("/generate", methods=["POST"])
 def generate():
     color = request.form.get("color")
@@ -123,7 +121,6 @@ def generate():
     save_log(color, emotion_label, user_input)
 
     return render_template("result.html", color=color, emotion_label=emotion_label, message=ai_message)
-
 
 @app.route("/logs")
 def logs():

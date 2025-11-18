@@ -20,29 +20,40 @@
             margin-bottom: 20px;
         }
 
-        /* グリッド（上4つ・下3つずらして配置） */
         .grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            grid-row-gap: 20px;
-            grid-column-gap: 10px;
-            margin-top: 20px;
+            grid-template-columns: repeat(4, 1fr); /* 上段4列 */
+            gap: 10px;
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
         }
 
-        /* ボタンの基本デザイン */
-        .emotion-btn {
-            padding: 12px;
+        .grid .emotion-btn {
+            width: 100%;
+            aspect-ratio: 2.4 / 1; /* 横長 */
+            font-size: clamp(14px, 2vw, 24px);
             border-radius: 14px;
-            font-size: 4.5vw;
-            text-decoration: none;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             color: white;
-            min-height: 20vw;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+            text-decoration: none;
         }
+
+        /* 上段4つ */
+        .grid .pink { grid-column: 1; grid-row: 1; }
+        .grid .green { grid-column: 2; grid-row: 1; }
+        .grid .yellow { grid-column: 3; grid-row: 1; }
+        .grid .purple { grid-column: 4; grid-row: 1; }
+
+        /* 下段3つを上段の間にずらす */
+        .grid .blue { grid-column: 1 / span 1; grid-row: 2; justify-self: center; }
+        .grid .black { grid-column: 2 / span 1; grid-row: 2; justify-self: center; }
+        .grid .red { grid-column: 3 / span 1; grid-row: 2; justify-self: center; }
+        .grid .bottom-row { margin-top: -25%; } /* 上段の間にずらす */
+
 
         /* 色ごとの背景 */
         .pink { background: #ff9ecb; }
@@ -52,11 +63,6 @@
         .blue { background: #a7c7ff; }
         .black { background: #b5b5b5; }
         .red { background: #ff9a9a; }
-
-        /* 下の段3つの位置調整（ずらす） */
-        .blue { grid-column: 2; }
-        .black { grid-column: 3; }
-        .red { grid-column: 4; }
 
         /* アイコンを大きく */
         .icon {
@@ -68,11 +74,11 @@
         .logs-btn {
             margin-top: 30px;
             display: inline-block;
-            padding: 10px 20px;
+            padding: 4px 8px;
             background: #b5d6ff;
             color: white;
             border-radius: 30px;
-            font-size: 5vw;
+            font-size: 3vw;
             text-decoration: none;
         }
 
@@ -87,48 +93,22 @@
 </head>
 <body>
 
-    <h1>🌈 きもちノート 🌈</h1>
+    <h1>🌈 きもち にっき 🌈</h1>
 
     <div class="grid">
-        <!-- 上4つ -->
-        <a href="/input/pink" class="emotion-btn pink">
-            <div class="icon">😄</div>
-            うれしい！
-        </a>
+        <!-- 上段4つ -->
+        <a href="/input/pink" class="emotion-btn pink">😄 うれしい</a>
+        <a href="/input/green" class="emotion-btn green">😌 おちつく</a>
+        <a href="/input/yellow" class="emotion-btn yellow">😮 びっくり</a>
+        <a href="/input/purple" class="emotion-btn purple">😕 もやもや</a>
+    
+        <!-- 下段3つ -->
+        <a href="/input/blue" class="emotion-btn blue">😢 さみしい</a>
+        <a href="/input/black" class="emotion-btn black">😴 つかれた</a>
+        <a href="/input/red" class="emotion-btn red">😡 イライラ</a>
+    </div>    
 
-        <a href="/input/green" class="emotion-btn green">
-            <div class="icon">😌</div>
-            おちつく
-        </a>
-
-        <a href="/input/yellow" class="emotion-btn yellow">
-            <div class="icon">😮</div>
-            びっくり！
-        </a>
-
-        <a href="/input/purple" class="emotion-btn purple">
-            <div class="icon">😕</div>
-            もやもや
-        </a>
-
-        <!-- 下3つ（位置ずらし） -->
-        <a href="/input/blue" class="emotion-btn blue">
-            <div class="icon">😢</div>
-            さみしい…
-        </a>
-
-        <a href="/input/black" class="emotion-btn black">
-            <div class="icon">😴</div>
-            つかれた…
-        </a>
-
-        <a href="/input/red" class="emotion-btn red">
-            <div class="icon">😡</div>
-            イライラ
-        </a>
-    </div>
-
-    <a href="/logs" class="logs-btn">📘 きろくを みる</a>
+    <a href="/logs" class="logs-btn">📘 きろくをみる</a>
 
 </body>
 </html>

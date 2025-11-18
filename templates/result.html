@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>きもちノート - きもちをうけとったよ！</title>
+    <title>きもち にっき - きもちをうけとったよ！</title>
     <style>
         body {
             font-family: "Hiragino Maru Gothic", sans-serif;
@@ -11,13 +11,13 @@
             text-align: center;
         }
         h1 {
-            font-size: 36px;
+            font-size: clamp(36px, 6vw, 80px); /* 36px〜80pxで画面に応じて拡大 */
             color: #ff6fa3;
             text-shadow: 1px 1px #ffd9e6;
             margin-bottom: 30px;
         }
         p.message {
-            font-size: 24px;
+            font-size: clamp(24px, 4vw, 50px); /* 24px〜50pxで拡大 */
             color: #555;
         }
         /* ホームボタン用の余白 */
@@ -25,8 +25,8 @@
             margin-top: 50px; /* ページ下に下げる */
         }
         .home-btn {
-            font-size: 18px;
-            padding: 10px 20px;
+            font-size: clamp(18px, 2.5vw, 36px); /* 18px〜36pxで拡大 */
+            padding: clamp(10px, 1.5vw, 20px) clamp(20px, 3vw, 40px); /* パディングも可変 */
             border-radius: 10px;
             background-color: #ff99cc;
             border: none;
