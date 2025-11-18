@@ -83,12 +83,20 @@
         }
 
         /* スマホ小画面調整 */
+        /* ★ スマホ画面（480px以下）のボタンを小さくする */
         @media (max-width: 480px) {
+
             .emotion-btn {
-                min-height: 22vw;
-                font-size: 4.8vw;
+                aspect-ratio: 2 / 1;      /* 横長を維持したまま小さく */
+                font-size: 4vw;           /* アイコン＋文字サイズを調整 */
+                padding: 4px 6px;         /* ボタン内の余白を小さく */
+            }
+
+            .icon {
+                font-size: 8vw;           /* 絵文字を適度に縮小 */
             }
         }
+
     </style>
 </head>
 <body>
