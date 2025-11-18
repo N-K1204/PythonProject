@@ -84,17 +84,36 @@
 
         /* スマホ小画面調整 */
         /* ★ スマホ画面（480px以下）のボタンを小さくする */
+        /* ★ スマホ画面だけはみ出し防止（重要） */
         @media (max-width: 480px) {
 
+            .grid {
+                grid-template-columns: repeat(3, 1fr); /* ← 7列 → 3列へ */
+                gap: 6px;
+            }
+
             .emotion-btn {
-                aspect-ratio: 2 / 1;      /* 横長を維持したまま小さく */
-                font-size: 4vw;           /* アイコン＋文字サイズを調整 */
-                padding: 4px 6px;         /* ボタン内の余白を小さく */
+                aspect-ratio: 2 / 1;   /* 横長は維持 */
+                font-size: 4.2vw;
+                padding: 6px;
             }
 
             .icon {
-                font-size: 8vw;           /* 絵文字を適度に縮小 */
+                font-size: 9vw;
             }
+
+            /* 上段は 1,2,3 */
+            .pink   { grid-column: 1; grid-row: 1; }
+            .yellow { grid-column: 2; grid-row: 1; }
+            .blue   { grid-column: 3; grid-row: 1; }
+
+            /* 下段は 1.5,2.5,3.5 → グリッド3列で再現 */
+            .green  { grid-column: 1; grid-row: 2; }
+            .purple { grid-column: 2; grid-row: 2; }
+            .black  { grid-column: 3; grid-row: 2; }
+
+            /* 下段3つめ */
+            .red    { grid-column: 2; grid-row: 3; }
         }
 
     </style>
