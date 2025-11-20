@@ -11,9 +11,13 @@ from dotenv import load_dotenv
 # --------------------
 load_dotenv()
 LINE_CHANNEL_TOKEN = os.getenv("LINE_CHANNEL_TOKEN")
-JST = timezone(timedelta(hours=9))
 LOG_FILE = "logs_local.txt"
 USERS_FILE = "users.json"
+
+# 日本標準時 (JST) の定義
+JST = timezone(timedelta(hours=9))
+def now_jst():
+    return datetime.now(JST)
 
 COLOR_LABELS = {
     "pink": "😄 うれしい",
@@ -68,7 +72,7 @@ users = load_users()
 def save_log(color, emotion_label, user_input):
     if not user_input.strip():
         user_input = "-"
-    timestamp = datetime.now(JST).strftime("%Y-%m-%d %H:%M:%S")
+    timestamp = now_jst().strftime("%Y-%m-%d %H:%M:%S")
     line = f"{timestamp}\t{color}\t{emotion_label}\t{user_input}\n"
     with open(LOG_FILE, "a", encoding="utf-8") as f:
         f.write(line)
@@ -119,7 +123,7 @@ def send_line_notify(user_ids, message):
 def index():
     return render_template("index.html", colors=COLOR_LABELS)
 
-# manifest.json を返す
+# manifest.json を返す（PWA用）
 @app.route("/manifest.json")
 def manifest():
     return app.send_static_file("manifest.json")
