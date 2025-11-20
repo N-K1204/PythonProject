@@ -6,29 +6,28 @@
     <style>
         body {
             font-family: "Hiragino Maru Gothic", sans-serif;
-            background-color: #fff8f0;
+            background-color: {{ bg_color }}; /* ← 色背景に対応 */
             padding: 20px;
             text-align: center;
         }
         h1 {
-            font-size: clamp(36px, 6vw, 80px); /* 36px〜80pxで画面に応じて拡大 */
-            color: #ff6fa3;
-            text-shadow: 1px 1px #ffd9e6;
+            font-size: clamp(36px, 6vw, 80px);
+            color: {{ main_color }};  /* ← 見出しの色も変更 */
+            text-shadow: 1px 1px #ffffff;
             margin-bottom: 30px;
         }
         p.message {
-            font-size: clamp(24px, 4vw, 50px); /* 24px〜50pxで拡大 */
+            font-size: clamp(24px, 4vw, 50px);
             color: #555;
         }
-        /* ホームボタン用の余白 */
         .home-btn-container {
-            margin-top: 50px; /* ページ下に下げる */
+            margin-top: 50px;
         }
         .home-btn {
-            font-size: clamp(18px, 2.5vw, 36px); /* 18px〜36pxで拡大 */
-            padding: clamp(10px, 1.5vw, 20px) clamp(20px, 3vw, 40px); /* パディングも可変 */
+            font-size: clamp(18px, 2.5vw, 36px);
+            padding: clamp(10px, 1.5vw, 20px) clamp(20px, 3vw, 40px);
             border-radius: 10px;
-            background-color: #ff99cc;
+            background-color: {{ main_color }}; /* ← メイン色に対応 */
             border: none;
             color: white;
             cursor: pointer;
@@ -42,9 +41,8 @@
 </head>
 <body>
     <h1>きもち、うけとったよ！</h1>
-    <p class="message">ありがとう😊</p>
+    <p class="message">{{ message }}</p>
 
-    <!-- ホームに戻るボタン（ページ下に配置） -->
     <div class="home-btn-container">
         <a class="home-btn" href="{{ url_for('index') }}">🏠 ホームにもどる</a>
     </div>

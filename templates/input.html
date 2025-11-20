@@ -20,6 +20,7 @@
             color: {{ main_color }};
             margin-top: 10px;
             margin-bottom: 20px;
+            text-shadow: 1px 1px #ffffffaa;
         }
 
         .label {
@@ -34,14 +35,16 @@
             padding: 15px;
             font-size: 5vw;
             border-radius: 14px;
-            border: 2px solid {{ main_color }};
+            border: 3px solid {{ main_color }};
             outline: none;
             resize: none;
             background: #ffffffd0;
+            transition: 0.2s;
         }
 
         textarea:focus {
             background: #ffffff;
+            box-shadow: 0 0 10px {{ main_color }}55;
         }
 
         .submit-btn {
@@ -53,6 +56,11 @@
             background: {{ main_color }};
             color: white;
             box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+            transition: transform 0.15s ease-in-out;
+        }
+
+        .submit-btn:hover {
+            transform: scale(1.05);
         }
 
         .home-btn {
@@ -62,6 +70,11 @@
             font-size: 5vw;
             text-decoration: none;
             color: {{ main_color }};
+            transition: opacity 0.2s;
+        }
+
+        .home-btn:hover {
+            opacity: 0.7;
         }
     </style>
 </head>
@@ -80,7 +93,6 @@
             autofocus
         ></textarea>
 
-
         <br>
 
         <button type="submit" class="submit-btn">
@@ -88,7 +100,7 @@
         </button>
     </form>
 
-    <a href="/" class="home-btn">🏠 ホームに もどる</a>
+    <a href="/" class="home-btn">🏠 ホームにもどる</a>
 
 </body>
 </html>

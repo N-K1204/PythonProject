@@ -22,17 +22,16 @@
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr); /* 上段4列 */
+            grid-template-columns: repeat(4, 1fr); /* 4列 × 2行に統一 */
             gap: 10px;
             width: 100%;
             max-width: 700px;
             margin: 0 auto;
-            position: relative;
         }
 
-        .grid .emotion-btn {
+        .emotion-btn {
             width: 100%;
-            aspect-ratio: 2.4 / 1; /* 横長 */
+            aspect-ratio: 2.4 / 1;
             font-size: clamp(14px, 2vw, 24px);
             border-radius: 14px;
             display: flex;
@@ -42,35 +41,32 @@
             text-decoration: none;
         }
 
-        /* 上段4つ */
-        .grid .pink { grid-column: 1; grid-row: 1; }
-        .grid .green { grid-column: 2; grid-row: 1; }
-        .grid .yellow { grid-column: 3; grid-row: 1; }
-        .grid .purple { grid-column: 4; grid-row: 1; }
-
-        /* 下段3つを上段の間にずらす */
-        .grid .blue { grid-column: 1 / span 1; grid-row: 2; justify-self: center; }
-        .grid .black { grid-column: 2 / span 1; grid-row: 2; justify-self: center; }
-        .grid .red { grid-column: 3 / span 1; grid-row: 2; justify-self: center; }
-        .grid .bottom-row { margin-top: -25%; } /* 上段の間にずらす */
-
-
         /* 色ごとの背景 */
-        .pink { background: #ff9ecb; }
-        .green { background: #a8e6a3; }
+        .pink   { background: #ff9ecb; }
+        .green  { background: #a8e6a3; }
         .yellow { background: #ffe27a; color: #7a5400; }
         .purple { background: #c7b4ff; }
-        .blue { background: #a7c7ff; }
-        .black { background: #b5b5b5; }
-        .red { background: #ff9a9a; }
+        .blue   { background: #a7c7ff; }
+        .black  { background: #b5b5b5; }
+        .red    { background: #ff9a9a; }
 
-        /* アイコンを大きく */
-        .icon {
-            font-size: 5vw;
-            margin-bottom: 2px;
+        /* ★ 追加：白色（期間限定） */
+        .white  { background: #f1f1f1; color: #555; }
+
+        /* スマホ小画面用 */
+        @media (max-width: 480px) {
+            .grid {
+                grid-template-columns: repeat(3, 1fr); /* スマホは3列 */
+                gap: 6px;
+            }
+
+            .emotion-btn {
+                aspect-ratio: 2 / 1;
+                font-size: 4.2vw;
+                padding: 6px;
+            }
         }
 
-        /* きろくボタン */
         .logs-btn {
             margin-top: 30px;
             display: inline-block;
@@ -82,40 +78,6 @@
             text-decoration: none;
         }
 
-        /* スマホ小画面調整 */
-        /* ★ スマホ画面（480px以下）のボタンを小さくする */
-        /* ★ スマホ画面だけはみ出し防止（重要） */
-        @media (max-width: 480px) {
-
-            .grid {
-                grid-template-columns: repeat(3, 1fr); /* ← 7列 → 3列へ */
-                gap: 6px;
-            }
-
-            .emotion-btn {
-                aspect-ratio: 2 / 1;   /* 横長は維持 */
-                font-size: 4.2vw;
-                padding: 6px;
-            }
-
-            .icon {
-                font-size: 9vw;
-            }
-
-            /* 上段は 1,2,3 */
-            .pink   { grid-column: 1; grid-row: 1; }
-            .yellow { grid-column: 2; grid-row: 1; }
-            .blue   { grid-column: 3; grid-row: 1; }
-
-            /* 下段は 1.5,2.5,3.5 → グリッド3列で再現 */
-            .green  { grid-column: 1; grid-row: 2; }
-            .purple { grid-column: 2; grid-row: 2; }
-            .black  { grid-column: 3; grid-row: 2; }
-
-            /* 下段3つめ */
-            .red    { grid-column: 2; grid-row: 3; }
-        }
-
     </style>
 </head>
 <body>
@@ -123,17 +85,20 @@
     <h1>🌈 きもち にっき 🌈</h1>
 
     <div class="grid">
-        <!-- 上段4つ -->
+        <!-- 上段 -->
         <a href="/input/pink" class="emotion-btn pink">😄 うれしい</a>
         <a href="/input/green" class="emotion-btn green">😌 おちつく</a>
         <a href="/input/yellow" class="emotion-btn yellow">😮 びっくり</a>
         <a href="/input/purple" class="emotion-btn purple">😕 もやもや</a>
-    
-        <!-- 下段3つ -->
+
+        <!-- 下段 -->
         <a href="/input/blue" class="emotion-btn blue">😢 さみしい</a>
         <a href="/input/black" class="emotion-btn black">😴 つかれた</a>
         <a href="/input/red" class="emotion-btn red">😡 イライラ</a>
-    </div>    
+
+        <!-- ★ 追加：期間限定ボタン -->
+        <a href="/input/white" class="emotion-btn white">😁 期間限定</a>
+    </div>
 
     <a href="/logs" class="logs-btn">📘 きろくをみる</a>
 
