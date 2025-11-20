@@ -57,7 +57,11 @@ app = Flask(__name__)
 def load_users():
     if os.path.exists(USERS_FILE):
         with open(USERS_FILE, "r", encoding="utf-8") as f:
-            return set(json.load(f))
+            try:
+                data = json.load(f)
+                return set(data)
+            except json.JSONDecodeError:
+                return set()
     return set()
 
 def save_users(users):
