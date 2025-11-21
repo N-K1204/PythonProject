@@ -41,7 +41,7 @@ THEME_COLORS = {
     "white":  {"bg": "#ffffff", "main": "#cccccc"}
 }
 
-FIXED_MESSAGE = "きもち、うけとったよ！ありがとう😊"
+FIXED_MESSAGE = "おしえてくれて ありがとう😊"
 
 logging.basicConfig(
     level=logging.INFO,
@@ -151,6 +151,7 @@ def generate():
     user_input = request.form.get("user_input", "")
     if color not in COLOR_LABELS:
         return "色が無効です", 400
+
     emotion_label = COLOR_LABELS[color]
     save_log(color, emotion_label, user_input)
 
@@ -158,7 +159,16 @@ def generate():
     message = f"💌 {emotion_label} が入力されました！\n内容: {user_input if user_input else '-'}"
     send_line_notify(users, message)
 
-    return render_template("result.html", color=color, emotion_label=emotion_label, message=FIXED_MESSAGE)
+    theme = THEME_COLORS[color]  # ←追加！
+
+    return render_template(
+        "result.html",
+        color=color,
+        emotion_label=emotion_label,
+        message=FIXED_MESSAGE,
+        bg_color=theme["bg"],       # ←追加
+        main_color=theme["main"]    # ←追加
+    )
 
 @app.route("/logs")
 def logs():
@@ -170,10 +180,12 @@ def logs():
         "logs.html",
         logs=logs_data,
         colors=COLOR_LABELS,
+        THEME_COLORS=THEME_COLORS,   # ←★追加
         filter_color=filter_color,
         filter_date=date,
         keyword=keyword
     )
+
 
 # --------------------
 # Webhook受信用（友だち追加時にユーザーIDを登録）

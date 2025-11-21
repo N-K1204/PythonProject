@@ -2,136 +2,234 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>きもち にっき - きろく</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>記録ページ</title>
+
     <style>
         body {
-            font-family: "Hiragino Maru Gothic", sans-serif;
-            background-color: #fff8f0;
+            font-family: "Hiragino Maru Gothic ProN", "Yu Gothic", sans-serif;
+            background: linear-gradient(135deg, #fff7e6, #ffeefd);
+            margin: 0;
             padding: 20px;
-            position: relative;
         }
+
+        /* ───── ページタイトル ───── */
         h1 {
             text-align: center;
-            font-size: 36px;
-            color: #ff6fa3;
-            text-shadow: 1px 1px #ffd9e6;
+            margin-bottom: 25px;
+            color: #444;
+            font-weight: 700;
+            font-size: 26px;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            font-size: 18px;
-        }
-        th, td {
-            border: 1px solid #ffb366;
-            padding: 10px;
-            text-align: center;
-        }
-        th {
-            background-color: #ffe0b3;
-        }
-        .color-square {
-            display: inline-block;
-            width: 25px;
-            height: 25px;
-            border-radius: 5px;
-        }
-        .red { background-color: #ff5c5c; }
-        .blue { background-color: #5ca0ff; }
-        .yellow { background-color: #ffe066; }
-        .green { background-color: #5cd65c; }
-        .pink { background-color: #ff99cc; }
-        .purple { background-color: #b386ff; }
-        .black { background-color: #777777; }
 
-        .search-form {
-            text-align: center;
-            margin-top: 20px;
-        }
-        select, input[type="date"] {
-            font-size: 18px;
-            padding: 5px 10px;
-            margin: 5px;
-            border-radius: 10px;
-            border: 2px solid #ffb366;
-        }
-        button, .home-btn {
-            font-size: 18px;
-            padding: 5px 15px;
-            border-radius: 10px;
-            background-color: #ff99cc;
-            border: none;
-            color: white;
-            cursor: pointer;
-            box-shadow: 2px 3px 5px rgba(0,0,0,0.2);
-            transition: transform 0.1s;
+        /* ───── 右上ホームボタン ───── */
+        .home-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
             text-decoration: none;
-        }
-        button:hover, .home-btn:hover {
-            transform: scale(1.05);
+            background: #bde4ff;
+            padding: 8px 14px;
+            font-size: 15px;
+            border-radius: 12px;
+            color: white;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.15);
         }
 
-        /* 上下に飛ぶボタン */
-        .scroll-btn {
-            position: fixed;
-            right: 20px;
-            padding: 10px 15px;
-            background-color: #ffb366;
-            color: white;
-            border-radius: 10px;
-            border: none;
-            cursor: pointer;
-            box-shadow: 2px 3px 5px rgba(0,0,0,0.2);
-            font-size: 18px;
-            margin-bottom: 10px;
+        /* ───── フィルター全体の箱 ───── */
+        .filter-box {
+            background: #ffffffcc;
+            padding: 15px;
+            border-radius: 16px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
         }
-        .scroll-top { bottom: 70px; } /* 下から上に戻るボタン */
-        .scroll-bottom { bottom: 20px; } /* 上から下にスクロールボタン */
+
+        /* 色フィルターボタン */
+        .color-filter {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            margin-top: 8px;
+        }
+
+        .color-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: 0.2s;
+        }
+
+        .color-btn.active {
+            border: 3px solid #555;
+            transform: scale(1.1);
+        }
+
+        .reset {
+            margin-left: 5px;
+            font-size: 14px;
+            color: #555;
+            text-decoration: underline;
+        }
+
+        /* ───── ログカード ───── */
+        .log-item {
+            background: #ffffffee;
+            padding: 14px;
+            margin-bottom: 14px;
+            border-radius: 16px;
+            border-left: 10px solid #ccc;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.07);
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .log-time {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .log-text {
+            margin-top: 6px;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        /* 入力UI */
+        button {
+            padding: 5px 12px;
+            font-size: 14px;
+            border-radius: 8px;
+            border: none;
+            background: #ffb6c1;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: #ff9eac;
+        }
+
+        input[type="text"],
+        input[type="date"] {
+            padding: 5px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        /* ───── 右下の上下スクロールボタン ───── */
+        .floating-btn {
+            position: fixed;
+            right: 18px;
+            width: 48px;
+            height: 48px;
+            background: #ffffffcc;
+            backdrop-filter: blur(4px);
+            border-radius: 50%;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 22px;
+            color: #444;
+            cursor: pointer;
+            z-index: 999;
+        }
+
+        .scroll-top {
+            bottom: 85px;
+        }
+
+        .scroll-bottom {
+            bottom: 25px;
+        }
+
     </style>
 </head>
 <body>
-    <div style="text-align:center; margin-bottom: 20px;">
-        <a class="home-btn" href="{{ url_for('index') }}">🏠 ホームにもどる</a>
-    </div>
 
-    <h1>きろく</h1>
+<!-- 右上ホームボタン -->
+<a href="/" class="home-btn">🏠 ホームにもどる</a>
 
-    <div class="search-form">
-        <form method="get" action="{{ url_for('logs') }}">
-            <label>きもちでしらべる:
-                <select name="color">
-                    <option value="">ぜんぶ</option>
-                    {% for key, label in colors.items() %}
-                    <option value="{{ key }}" {% if filter_color == key %}selected{% endif %}>{{ label }}</option>
-                    {% endfor %}
-                </select>
-            </label>
-            <label>ひづけでしらべる:
-                <input type="date" name="date" value="{{ filter_date }}">
-            </label>
-            <button type="submit">しらべる</button>
-        </form>
-    </div>
+<h1>📘 きもちのきろく</h1>
 
-    <table>
-        <tr>
-            <th>ひづけ</th>
-            <th>いろ</th>
-            <th>きもち</th>
-            <th>かいたこと</th>
-        </tr>
-        {% for log in logs %}
-        <tr>
-            <td>{{ log.created_at }}</td>
-            <td><span class="color-square {{ log.color }}"></span></td>
-            <td>{{ log.emotion_label }}</td>
-            <td>{{ log.user_input if log.user_input != '' else '-' }}</td>
-        </tr>
+<!-- フィルター：色 -->
+<div class="filter-box">
+    <strong>🎨 きもちでさがす</strong>
+    <div class="color-filter">
+
+        {% for key, label in colors.items() %}
+            <a href="/logs?color={{ key }}"
+               class="color-btn {% if filter_color == key %}active{% endif %}"
+               style="
+                    background-color: {{ THEME_COLORS[key].main }};
+                    {% if key == 'white' %} border: 2px solid #ccc; {% endif %}
+               ">
+            </a>
         {% endfor %}
-    </table>
 
-    <!-- スクロールボタン -->
-    <button class="scroll-btn scroll-top" onclick="window.scrollTo({top:0, behavior:'smooth'})">↑ トップへ</button>
-    <button class="scroll-btn scroll-bottom" onclick="window.scrollTo({top:document.body.scrollHeight, behavior:'smooth'})">↓ 下へ</button>
+        <a href="/logs" class="reset">リセット</a>
+    </div>
+</div>
+
+<!-- フィルター：日付 -->
+<div class="filter-box">
+    <strong>📅 ひづけでさがす</strong>
+    <form method="get" action="/logs" style="margin-top: 8px;">
+        <input type="date" name="date" value="{{ filter_date }}">
+        {% if filter_color %}
+            <input type="hidden" name="color" value="{{ filter_color }}">
+        {% endif %}
+        {% if keyword %}
+            <input type="hidden" name="keyword" value="{{ keyword }}">
+        {% endif %}
+        <button type="submit">検索</button>
+    </form>
+</div>
+
+<!-- フィルター：キーワード -->
+<div class="filter-box">
+    <strong>🔍 ことばでさがす</strong>
+    <form method="get" action="/logs" style="margin-top: 8px;">
+        <input type="text" name="keyword" placeholder="キーワード" value="{{ keyword or '' }}">
+        {% if filter_color %}
+            <input type="hidden" name="color" value="{{ filter_color }}">
+        {% endif %}
+        {% if filter_date %}
+            <input type="hidden" name="date" value="{{ filter_date }}">
+        {% endif %}
+        <button type="submit">検索</button>
+    </form>
+</div>
+
+<hr style="margin: 25px 0;">
+
+<!-- ログ一覧 -->
+{% if logs %}
+    {% for log in logs %}
+        <div class="log-item" style="border-left-color: {{ THEME_COLORS[log.color].main }};">
+            <div class="log-time">{{ log.created_at }}</div>
+            <div class="log-text">
+                <strong>{{ log.emotion_label }}</strong><br>
+                {{ log.user_input }}
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <p>きろくなし</p>
+{% endif %}
+
+<!-- 下固定ボタン（上へ・下へ） -->
+<div class="floating-btn scroll-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'});">⬆</div>
+<div class="floating-btn scroll-bottom" onclick="window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'});">⬇</div>
+
 </body>
 </html>

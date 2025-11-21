@@ -2,49 +2,59 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>きもち にっき - きもちをうけとったよ！</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>きもち うけとったよ</title>
     <style>
         body {
-            font-family: "Hiragino Maru Gothic", sans-serif;
-            background-color: {{ bg_color }}; /* ← 色背景に対応 */
-            padding: 20px;
+            background-color: {{ bg_color }};
+            color: #333;
+            font-family: "Hiragino Sans", "Yu Gothic", sans-serif;
             text-align: center;
+            padding: 40px 20px;
         }
+
+        .message-box {
+            background: #fff;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            box-shadow: 0px 3px 10px rgba(0,0,0,0.1);
+            border-left: 10px solid {{ main_color }};
+        }
+
         h1 {
-            font-size: clamp(36px, 6vw, 80px);
-            color: {{ main_color }};  /* ← 見出しの色も変更 */
-            text-shadow: 1px 1px #ffffff;
-            margin-bottom: 30px;
+            font-size: 26px;
+            color: {{ main_color }};
+            margin-bottom: 20px;
         }
-        p.message {
-            font-size: clamp(24px, 4vw, 50px);
-            color: #555;
-        }
-        .home-btn-container {
-            margin-top: 50px;
-        }
+
         .home-btn {
-            font-size: clamp(18px, 2.5vw, 36px);
-            padding: clamp(10px, 1.5vw, 20px) clamp(20px, 3vw, 40px);
-            border-radius: 10px;
-            background-color: {{ main_color }}; /* ← メイン色に対応 */
-            border: none;
+            display: inline-block;
+            margin-top: 30px;
+            background: {{ main_color }};
             color: white;
-            cursor: pointer;
-            box-shadow: 2px 3px 5px rgba(0,0,0,0.2);
             text-decoration: none;
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-size: 18px;
+            transition: 0.3s;
         }
+
         .home-btn:hover {
-            transform: scale(1.05);
+            opacity: 0.8;
         }
     </style>
 </head>
 <body>
-    <h1>きもち、うけとったよ！</h1>
-    <p class="message">{{ message }}</p>
 
-    <div class="home-btn-container">
-        <a class="home-btn" href="{{ url_for('index') }}">🏠 ホームにもどる</a>
+    <h1>きもち、うけとったよ！</h1>
+
+    <div class="message-box">
+        <p style="font-size:20px;">{{ message }}</p>
     </div>
+
+    <!-- ホームへ戻る -->
+    <a href="/" class="home-btn">🏠 ホームにもどる</a>
+
 </body>
 </html>
