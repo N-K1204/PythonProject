@@ -30,10 +30,13 @@
         }
 
         .emotion-btn {
-            width: 100%;
+            width: 85%;
             aspect-ratio: 2.4 / 1;
-            font-size: clamp(14px, 2vw, 24px);
+            font-size: clamp(14px, 2vw, 20px);
             border-radius: 14px;
+            max-width: 260px;     /* ← PCだと大きくなりすぎない */
+            margin: 10px auto;
+            padding: 14px 18px;   /* ← ボタン全体を少し小さく */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -53,17 +56,20 @@
         /* ★ 追加：白色（期間限定） */
         .white  { background: #f1f1f1; color: #555; }
 
-        /* スマホ小画面用 */
-        @media (max-width: 480px) {
-            .grid {
-                grid-template-columns: repeat(3, 1fr); /* スマホは3列 */
-                gap: 6px;
+        /* ホバー時（PCのみ） */
+        @media (hover: hover) {
+            .emotion-button:hover {
+                transform: scale(1.04);
             }
+        }
 
-            .emotion-btn {
-                aspect-ratio: 2 / 1;
-                font-size: 4.2vw;
-                padding: 6px;
+        /* スマホ（画面幅600px以下）向け */
+        @media (max-width: 600px) {
+            .emotion-button {
+                width: 90%;
+                padding: 12px 16px;   /* ← さらに少し小さく */
+                font-size: 18px;
+                border-radius: 12px;
             }
         }
 
