@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>きもちをえらぶ</title>
+    <title>きもちにっき</title>
 
     <style>
         body {
@@ -30,18 +30,30 @@
         }
 
         .emotion-btn {
-            width: 65%;
-            font-size: clamp(14px, 2vw, 20px);
-            border-radius: 14px;
-            max-width: 350px;     /* ← PCだと大きくなりすぎない */
+            width: 70%;                      /* スマホは広め、PCは中央で小さめ */
+            max-width: 350px;                /* PCで巨大にならない */
             margin: 12px auto;
-            padding: 16px 20px;   /* ← ボタン全体を少し小さく */
+            
+            padding: clamp(10px, 3vw, 18px); /* ← 横幅に応じて自動調整 */
+            
+            font-size: clamp(14px, 4vw, 20px);   /* ← スマホで大きく、PCでほどよく */
+            
+            border-radius: clamp(10px, 4vw, 16px); /* ← 丸みも画面幅に応じて調整 */
+
             display: flex;
             justify-content: center;
             align-items: center;
+
             color: white;
             text-decoration: none;
+            transition: transform 0.2s;
         }
+
+        /* クリック/ホバー時（PCのみホバーが効く） */
+        .emotion-btn:hover {
+            transform: scale(1.03);
+        }
+
 
         /* 色ごとの背景 */
         .pink   { background: #ff9ecb; }
