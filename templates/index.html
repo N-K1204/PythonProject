@@ -30,13 +30,12 @@
         }
 
         .emotion-btn {
-            width: 85%;
-            aspect-ratio: 2.4 / 1;
+            width: 70%;
             font-size: clamp(14px, 2vw, 20px);
             border-radius: 14px;
-            max-width: 260px;     /* ← PCだと大きくなりすぎない */
-            margin: 10px auto;
-            padding: 14px 18px;   /* ← ボタン全体を少し小さく */
+            max-width: 350px;     /* ← PCだと大きくなりすぎない */
+            margin: 12px auto;
+            padding: 16px 20px;   /* ← ボタン全体を少し小さく */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -66,8 +65,7 @@
         /* スマホ（画面幅600px以下）向け */
         @media (max-width: 600px) {
             .emotion-button {
-                width: 90%;
-                padding: 12px 16px;   /* ← さらに少し小さく */
+                padding: 14px 18px;   /* ← さらに少し小さく */
                 font-size: 18px;
                 border-radius: 12px;
             }
