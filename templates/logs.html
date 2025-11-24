@@ -111,6 +111,7 @@
             margin-top: 6px;
             font-size: 15px;
             line-height: 1.6;
+            white-space: pre-wrap; 
         }
 
         /* 入力UI */
@@ -237,17 +238,18 @@
 <!-- ログ一覧 -->
 {% if logs %}
     {% for log in logs %}
-        <div class="log-item" style="border-left-color: {{ THEME_COLORS[log.color].main }};">
-            <div class="log-time">{{ log.created_at }}</div>
-            <div class="log-text">
-                <strong>{{ log.emotion_label }}</strong><br>
-                {{ log.user_input }}
-            </div>
-        </div>
+    <div class="log-item" style="border-left-color: {{ THEME_COLORS[log.color].main }};">
+        <div class="log-time">{{ log.created_at }}</div>
+        <div class="log-text">
+<pre style="margin:0; font-family:inherit; white-space:pre-wrap;">{{ log.emotion_label }}
+{{ log.user_input }}</pre>
+        </div>            
+    </div>
     {% endfor %}
 {% else %}
     <p>きろくなし</p>
 {% endif %}
+
 
 <!-- 下固定ボタン（上へ・下へ） -->
 <div class="floating-btn scroll-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'});">⬆</div>

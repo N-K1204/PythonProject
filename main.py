@@ -14,7 +14,7 @@ LINE_CHANNEL_TOKEN = os.getenv("LINE_CHANNEL_TOKEN")
 LOG_FILE = "logs_local.txt"
 USERS_FILE = "users.json"
 
-# 日本標準時 (JST) の定義
+# 日本標準時 (JST)
 JST = timezone(timedelta(hours=9))
 def now_jst():
     return datetime.now(JST)
@@ -51,6 +51,13 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
+# --- Jinja2 フィルター追加（← これが重要！） ---
+@app.template_filter('nl2br')
+def nl2br(value):
+    if value is None:
+        return ""
+    return value.replace("\r\n", "<br>").replace("\n", "<br>")
+
 # --------------------
 # ユーザー管理
 # --------------------
@@ -76,31 +83,55 @@ users = load_users()
 def save_log(color, emotion_label, user_input):
     if not user_input.strip():
         user_input = "-"
+    # 改行を統一してそのまま保存
+    user_input_clean = user_input.replace("\r\n", "\n").replace("\r", "\n")
     timestamp = now_jst().strftime("%Y-%m-%d %H:%M:%S")
-    line = f"{timestamp}\t{color}\t{emotion_label}\t{user_input}\n"
+    line = f"{timestamp}\t{color}\t{emotion_label}\t{user_input_clean}\n"
     with open(LOG_FILE, "a", encoding="utf-8") as f:
         f.write(line)
-    logger.info(f"Saved log for color: {color}")
 
 def load_logs(filter_color=None, keyword=None, date=None):
     logs = []
     if os.path.exists(LOG_FILE):
         with open(LOG_FILE, "r", encoding="utf-8") as f:
-            for line in reversed(f.readlines()):
-                if not line.strip(): continue
-                parts = line.strip().split("\t")
-                if len(parts) < 4: continue
-                timestamp, color, emotion_label, user_input = parts
-                if filter_color and color != filter_color: continue
-                if keyword and keyword not in user_input: continue
-                if date and not timestamp.startswith(date): continue
-                logs.append({
-                    "created_at": timestamp,
-                    "color": color,
-                    "emotion_label": emotion_label,
-                    "user_input": user_input
-                })
+            current_log = None
+            for line in f:
+                line = line.rstrip("\n")
+                if not line:
+                    continue
+
+                if "\t" in line:
+                    # タブ3つで分割（最初の3つのタブ）
+                    parts = line.split("\t", 3)
+                    if len(parts) < 4:
+                        continue
+                    timestamp, color, emotion_label, user_input = parts
+
+                    # フィルター
+                    if filter_color and color != filter_color:
+                        continue
+                    if keyword and keyword not in user_input:
+                        continue
+                    if date and not timestamp.startswith(date):
+                        continue
+
+                    current_log = {
+                        "created_at": timestamp,
+                        "color": color,
+                        "emotion_label": emotion_label,
+                        "user_input": user_input
+                    }
+                    logs.append(current_log)
+                else:
+                    # タブなし行は直前のログの最後に追加
+                    if current_log:
+                        current_log["user_input"] += "\n" + line
+
+    # ここで最新のログを先頭に持ってくる
+    logs.reverse()
     return logs
+
+
 
 # --------------------
 # LINE通知
@@ -127,7 +158,6 @@ def send_line_notify(user_ids, message):
 def index():
     return render_template("index.html", colors=COLOR_LABELS)
 
-# manifest.json を返す（PWA用）
 @app.route("/manifest.json")
 def manifest():
     return app.send_static_file("manifest.json")
@@ -155,19 +185,18 @@ def generate():
     emotion_label = COLOR_LABELS[color]
     save_log(color, emotion_label, user_input)
 
-    # LINE通知を送信
     message = f"💌 {emotion_label} が入力されました！\n内容: {user_input if user_input else '-'}"
     send_line_notify(users, message)
 
-    theme = THEME_COLORS[color]  # ←追加！
+    theme = THEME_COLORS[color]
 
     return render_template(
         "result.html",
         color=color,
         emotion_label=emotion_label,
         message=FIXED_MESSAGE,
-        bg_color=theme["bg"],       # ←追加
-        main_color=theme["main"]    # ←追加
+        bg_color=theme["bg"],
+        main_color=theme["main"]
     )
 
 @app.route("/logs")
@@ -180,21 +209,20 @@ def logs():
         "logs.html",
         logs=logs_data,
         colors=COLOR_LABELS,
-        THEME_COLORS=THEME_COLORS,   # ←★追加
+        THEME_COLORS=THEME_COLORS,
         filter_color=filter_color,
         filter_date=date,
         keyword=keyword
     )
 
-
 # --------------------
-# Webhook受信用（友だち追加時にユーザーIDを登録）
+# Webhook受信
 # --------------------
 @app.route("/webhook", methods=["POST"])
 def webhook():
     data = request.get_json()
     for event in data.get("events", []):
-        if event["type"] == "follow":  # 友だち追加時
+        if event["type"] == "follow":
             user_id = event["source"]["userId"]
             users.add(user_id)
             save_users(users)
