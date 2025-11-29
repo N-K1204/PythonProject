@@ -47,20 +47,21 @@
             box-shadow: 0 0 10px {{ main_color }}55;
         }
 
+        /* --- ボタンを大きく --- */
         .submit-btn {
             margin-top: 25px;
-            padding: 12px 30px;
-            font-size: 5vw;
+            padding: 18px 40px;
+            font-size: 6vw;
             border: none;
-            border-radius: 30px;
+            border-radius: 40px;
             background: {{ main_color }};
             color: white;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.18);
             transition: transform 0.15s ease-in-out;
         }
 
         .submit-btn:hover {
-            transform: scale(1.05);
+            transform: scale(1.08);
         }
 
         .home-btn {
@@ -77,22 +78,25 @@
             opacity: 0.7;
         }
 
-        /* 💌 のアニメーション設定 */
+        /* --- 💌 を強調 --- */
         .heart {
             display: inline-block;
-            transition: transform 0.3s ease;
+            transform: scale(1.3);   /* 初期から少し大きく */
+            margin-left: 5px;
         }
 
+        /* 💌 のアニメーション開始後 */
         .animate-heart {
-            animation: popmove 2.5s infinite ease-in-out;
+            animation: popmove 2s infinite ease-in-out;
         }
 
+        /* --- 💌 のアニメーション（より目立つ） --- */
         @keyframes popmove {
-            0%   { transform: scale(1) translateY(0); }
-            25%  { transform: scale(1.2) translateY(-4px); }
-            50%  { transform: scale(1.1) translateY(2px); }
-            75%  { transform: scale(1.25) translateY(-3px); }
-            100% { transform: scale(1) translateY(0); }
+            0%   { transform: scale(1.3) translateY(0); }
+            25%  { transform: scale(1.6) translateY(-6px); }
+            50%  { transform: scale(1.45) translateY(3px); }
+            75%  { transform: scale(1.7) translateY(-5px); }
+            100% { transform: scale(1.3) translateY(0); }
         }
     </style>
 </head>
@@ -120,12 +124,12 @@
 
     <a href="/" class="home-btn">🏠 ホームにもどる</a>
 
-    <!-- 3秒後に💌がアニメ開始 -->
+    <!-- 1秒後に💌がアニメ開始 -->
     <script>
         window.addEventListener("DOMContentLoaded", () => {
             setTimeout(() => {
                 document.querySelector(".heart").classList.add("animate-heart");
-            }, 1000);
+            }, 1000); // 1秒後に開始
         });
     </script>
 
