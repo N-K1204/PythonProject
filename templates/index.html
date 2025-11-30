@@ -68,9 +68,7 @@
             text-decoration: none;
         }
 
-        /* =========================================
-           ▼▼▼ まま・とーと機能 ▼▼▼
-        ========================================= */
+        /* ふわふわアニメーション */
         @keyframes fluffy {
             0%   { transform: translateY(0); }
             50%  { transform: translateY(-10px); }
@@ -111,7 +109,6 @@
         .sound-emoji:hover {
             transform: scale(1.18);
         }
-        /* ========================================= */
     </style>
 </head>
 
@@ -124,7 +121,6 @@
         <a href="/input/green" class="emotion-btn green">😌 おちつく</a>
         <a href="/input/yellow" class="emotion-btn yellow">😮 びっくり</a>
         <a href="/input/purple" class="emotion-btn purple">😕 もやもや</a>
-
         <a href="/input/blue" class="emotion-btn blue">😢 さみしい</a>
         <a href="/input/black" class="emotion-btn black">😴 つかれた</a>
         <a href="/input/red" class="emotion-btn red">😡 イライラ</a>
@@ -133,20 +129,20 @@
 
     <a href="/logs" class="logs-btn">📘 きろくをみる</a>
 
-    <!-- ===== 家族絵文字 ===== -->
+    <!-- 家族絵文字 -->
     <div class="family-area">
         <div id="mama" class="family-emoji">👩‍🦰</div>
         <div id="toto" class="family-emoji">👦</div>
     </div>
 
-    <!-- ===== 音アイコン（まま） ===== -->
+    <!-- 音アイコン（まま） -->
     <div id="mama-sounds" class="sound-emojis">
         <div class="sound-emoji">🚗</div>
         <div class="sound-emoji">🥁</div>
         <div class="sound-emoji">🎹</div>
     </div>
 
-    <!-- ===== 音アイコン（とーと） ===== -->
+    <!-- 音アイコン（とーと） -->
     <div id="toto-sounds" class="sound-emojis">
         <div class="sound-emoji">🚃</div>
         <div class="sound-emoji">📞</div>
@@ -154,42 +150,48 @@
     </div>
 
 <script>
-    // =======================
-    // 絵文字ごとの音ファイル（statics でOK）
-    // =======================
-    const soundMap = {
-        "🚗": ["/statics/sounds/car1.mp3","/statics/sounds/car2.mp3"],
-        "🥁": ["/statics/sounds/drum1.mp3","/statics/sounds/drum2.mp3","/statics/sounds/drum3.mp3"],
-        "🎹": ["/statics/sounds/piano1.mp3"],
-        "🚃": ["/statics/sounds/train1.mp3","/statics/sounds/train2.mp3"],
-        "📞": ["/statics/sounds/tel1.mp3","/statics/sounds/tel2.mp3"],
-        "🎺": ["/statics/sounds/trumpet1.mp3","/statics/sounds/trumpet2.mp3","/statics/sounds/trumpet3.mp3"]
+const soundMap = {
+    "🚗": ["/static/sounds/car1.mp3", "/static/sounds/car2.mp3"],
+    "🥁": ["/static/sounds/drum1.mp3", "/static/sounds/drum2.mp3", "/static/sounds/drum3.mp3"],
+    "🎹": ["/static/sounds/piano1.mp3"],
+    "🚃": ["/static/sounds/train1.mp3", "/static/sounds/train2.mp3"],
+    "📞": ["/static/sounds/tel1.mp3", "/static/sounds/tel2.mp3"],
+    "🎺": ["/static/sounds/trumpet1.mp3", "/static/sounds/trumpet2.mp3", "/static/sounds/trumpet3.mp3"]
+};
+
+// まま・とーとクリックで音アイコン表示
+document.getElementById("mama").onclick = () => {
+    document.getElementById("mama-sounds").style.display = "flex";
+    document.getElementById("toto-sounds").style.display = "none";
+};
+document.getElementById("toto").onclick = () => {
+    document.getElementById("toto-sounds").style.display = "flex";
+    document.getElementById("mama-sounds").style.display = "none";
+};
+
+// 再生用 Audio オブジェクトを1つだけ
+let currentAudio = null;
+
+// 音アイコンクリックで音再生（前の音を停止）
+document.querySelectorAll(".sound-emoji").forEach(el => {
+    el.onclick = () => {
+        const emoji = el.textContent.trim();
+        if (!soundMap[emoji]) return;
+
+        const sounds = soundMap[emoji];
+        const randomSound = sounds[Math.floor(Math.random() * sounds.length)];
+
+        // 前の音を停止
+        if (currentAudio) {
+            currentAudio.pause();
+            currentAudio.currentTime = 0;
+        }
+
+        // 新しい音を再生
+        currentAudio = new Audio(randomSound);
+        currentAudio.play().catch(err => console.error("Audio再生エラー:", err));
     };
-
-    // まま / とーと を押したら音アイコン表示
-    document.getElementById("mama").onclick = () => {
-        document.getElementById("mama-sounds").style.display = "flex";
-        document.getElementById("toto-sounds").style.display = "none";
-    };
-
-    document.getElementById("toto").onclick = () => {
-        document.getElementById("toto-sounds").style.display = "flex";
-        document.getElementById("mama-sounds").style.display = "none";
-    };
-
-    // 音アイコンを押したら音が鳴る（毎回新しい Audio オブジェクト）
-    document.querySelectorAll(".sound-emoji").forEach(el => {
-        el.addEventListener("click", () => {
-            const emoji = el.textContent.trim();
-            if (!soundMap[emoji]) return;
-
-            const list = soundMap[emoji];
-            const randomPath = list[Math.floor(Math.random() * list.length)];
-
-            const audio = new Audio(randomPath);
-            audio.play().catch(e => console.log("再生エラー:", e));
-        });
-    });
+});
 </script>
 
 </body>
