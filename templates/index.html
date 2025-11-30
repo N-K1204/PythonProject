@@ -22,7 +22,7 @@
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr); /* 4列 × 2行に統一 */
+            grid-template-columns: repeat(4, 1fr);
             gap: 10px;
             width: 100%;
             max-width: 700px;
@@ -30,32 +30,24 @@
         }
 
         .emotion-btn {
-            width: 70%;                      /* スマホは広め、PCは中央で小さめ */
-            max-width: 350px;                /* PCで巨大にならない */
+            width: 70%;
+            max-width: 350px;
             margin: 12px auto;
-            
-            padding: clamp(10px, 3vw, 18px); /* ← 横幅に応じて自動調整 */
-            
-            font-size: clamp(10px, 4vw, 20px);   /* ← スマホで大きく、PCでほどよく */
-            
-            border-radius: clamp(10px, 4vw, 16px); /* ← 丸みも画面幅に応じて調整 */
-
+            padding: clamp(10px, 3vw, 18px);
+            font-size: clamp(10px, 4vw, 20px);
+            border-radius: clamp(10px, 4vw, 16px);
             display: flex;
             justify-content: center;
             align-items: center;
-
             color: white;
             text-decoration: none;
             transition: transform 0.2s;
         }
 
-        /* クリック/ホバー時（PCのみホバーが効く） */
         .emotion-btn:hover {
             transform: scale(1.03);
         }
 
-
-        /* 色ごとの背景 */
         .pink   { background: #ff9ecb; }
         .green  { background: #a8e6a3; }
         .yellow { background: #ffe27a; color: #7a5400; }
@@ -63,25 +55,7 @@
         .blue   { background: #a7c7ff; }
         .black  { background: #b5b5b5; }
         .red    { background: #ff9a9a; }
-
-        /* ★ 追加：白色（期間限定） */
         .white  { background: #f1f1f1; color: #555; }
-
-        /* ホバー時（PCのみ） */
-        @media (hover: hover) {
-            .emotion-button:hover {
-                transform: scale(1.04);
-            }
-        }
-
-        /* スマホ（画面幅600px以下）向け */
-        @media (max-width: 600px) {
-            .emotion-button {
-                padding: 14px 18px;   /* ← さらに少し小さく */
-                font-size: 18px;
-                border-radius: 12px;
-            }
-        }
 
         .logs-btn {
             margin-top: 30px;
@@ -94,29 +68,129 @@
             text-decoration: none;
         }
 
+        /* =========================================
+           ▼▼▼ まま・とーと機能 ▼▼▼
+        ========================================= */
+        @keyframes fluffy {
+            0%   { transform: translateY(0); }
+            50%  { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
+        }
+
+        .family-area {
+            margin-top: 45px;
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+        }
+
+        .family-emoji {
+            font-size: 10vw;
+            cursor: pointer;
+            animation: fluffy 3s ease-in-out infinite;
+            transition: transform 0.2s ease;
+        }
+
+        .family-emoji:hover {
+            transform: scale(1.15);
+        }
+
+        .sound-emojis {
+            margin-top: 10px;
+            display: none;
+            justify-content: center;
+            gap: 35px;
+        }
+
+        .sound-emoji {
+            font-size: 12vw;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .sound-emoji:hover {
+            transform: scale(1.18);
+        }
+        /* ========================================= */
     </style>
 </head>
+
 <body>
 
     <h1>🌈 きもち にっき 🌈</h1>
 
     <div class="grid">
-        <!-- 上段 -->
         <a href="/input/pink" class="emotion-btn pink">😄 うれしい</a>
         <a href="/input/green" class="emotion-btn green">😌 おちつく</a>
         <a href="/input/yellow" class="emotion-btn yellow">😮 びっくり</a>
         <a href="/input/purple" class="emotion-btn purple">😕 もやもや</a>
 
-        <!-- 下段 -->
         <a href="/input/blue" class="emotion-btn blue">😢 さみしい</a>
         <a href="/input/black" class="emotion-btn black">😴 つかれた</a>
         <a href="/input/red" class="emotion-btn red">😡 イライラ</a>
-
-        <!-- ★ 追加：期間限定ボタン -->
         <a href="/input/white" class="emotion-btn white">😁 期間限定</a>
     </div>
 
     <a href="/logs" class="logs-btn">📘 きろくをみる</a>
+
+    <!-- ===== 家族絵文字 ===== -->
+    <div class="family-area">
+        <div id="mama" class="family-emoji">👩‍🦰</div>
+        <div id="toto" class="family-emoji">👦</div>
+    </div>
+
+    <!-- ===== 音アイコン（まま） ===== -->
+    <div id="mama-sounds" class="sound-emojis">
+        <div class="sound-emoji">🚗</div>
+        <div class="sound-emoji">🥁</div>
+        <div class="sound-emoji">🎹</div>
+    </div>
+
+    <!-- ===== 音アイコン（とーと） ===== -->
+    <div id="toto-sounds" class="sound-emojis">
+        <div class="sound-emoji">🚃</div>
+        <div class="sound-emoji">📞</div>
+        <div class="sound-emoji">🎺</div>
+    </div>
+
+<script>
+    // =======================
+    // 絵文字ごとの音ファイル（statics でOK）
+    // =======================
+    const soundMap = {
+        "🚗": ["/statics/sounds/car1.mp3","/statics/sounds/car2.mp3"],
+        "🥁": ["/statics/sounds/drum1.mp3","/statics/sounds/drum2.mp3","/statics/sounds/drum3.mp3"],
+        "🎹": ["/statics/sounds/piano1.mp3"],
+        "🚃": ["/statics/sounds/train1.mp3","/statics/sounds/train2.mp3"],
+        "📞": ["/statics/sounds/tel1.mp3","/statics/sounds/tel2.mp3"],
+        "🎺": ["/statics/sounds/trumpet1.mp3","/statics/sounds/trumpet2.mp3","/statics/sounds/trumpet3.mp3"]
+    };
+
+    // まま / とーと を押したら音アイコン表示
+    document.getElementById("mama").onclick = () => {
+        document.getElementById("mama-sounds").style.display = "flex";
+        document.getElementById("toto-sounds").style.display = "none";
+    };
+
+    document.getElementById("toto").onclick = () => {
+        document.getElementById("toto-sounds").style.display = "flex";
+        document.getElementById("mama-sounds").style.display = "none";
+    };
+
+    // 音アイコンを押したら音が鳴る（毎回新しい Audio オブジェクト）
+    document.querySelectorAll(".sound-emoji").forEach(el => {
+        el.addEventListener("click", () => {
+            const emoji = el.textContent.trim();
+            if (!soundMap[emoji]) return;
+
+            const list = soundMap[emoji];
+            const randomPath = list[Math.floor(Math.random() * list.length)];
+
+            const audio = new Audio(randomPath);
+            audio.play().catch(e => console.log("再生エラー:", e));
+        });
+    });
+</script>
 
 </body>
 </html>
